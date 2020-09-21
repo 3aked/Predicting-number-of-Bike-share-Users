@@ -1,0 +1,56 @@
+#extraire les stations :
+
+stationId = vector( "numeric")
+for( i in 1:nrow(f) )
+{
+if(length( which(stationId==f[i,4]) )==0) {stationId<-rbind(stationId,f[i,4])}
+}
+submit<-data.frame(stationId)
+write.csv(submit, file = "stationM6.csv", row.names = FALSE)
+length(stationId)
+
+
+library(dplyr)
+library(tibble)
+library(tidyr)
+library(readr)
+
+df<-read.csv2("/home/lisic/Bureau/all_day1.csv")
+colnames(df)<-c("x1","x2","x3")
+head(df,5)
+
+stationId = vector( "numeric")
+
+df1<-df[order(df[,3],decreasing = TRUE),]
+head(df1,5)
+
+
+for(j in 1:5){
+for( i in 1:nrow(df1) )
+{
+df1<-df1[order(df1[,3],decreasing = TRUE),]
+stationId<-rbind(stationId,df1[2,1])
+if(length( which(stationId==df1[2,2]) )==0) {stationId<-rbind(stationId,df1[2,2])}
+  if (length(which(stationId==df1[i,1]))==1)
+	{
+	if(length( which(stationId==df1[i,2]) )==0) {stationId<-rbind(stationId,df1[i,2])
+							df1[i,3]=0}
+	}
+
+
+ if (length(which(stationId==df1[i,2]))==1)
+	{
+	if(length( which(stationId==df1[i,1]) )==0) {stationId <-rbind(stationId,df1[i,1])
+							df1[i,3]=0}
+	}
+
+if(length(stationId)==10) {break}
+}
+submit<-data.frame(stationId)
+write.csv(submit, file = paste("station",j,".csv"), row.names = FALSE)
+stationId = vector( "numeric")
+}
+
+
+
+
